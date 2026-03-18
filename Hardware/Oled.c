@@ -116,6 +116,7 @@ void OLED_ShowChinese(uint8_t x,uint8_t y,uint8_t *s,uint8_t sizey,uint8_t mode)
 	while(*s!=0)
 	{
 		if(sizey==16) OLED_ShowChinese16x16(x,y,s,sizey,mode);
+		else if(sizey==12) OLED_ShowChinese12x12(x,y,s,sizey,mode);
 		else if(sizey==24) OLED_ShowChinese24x24(x,y,s,sizey,mode);
 		else if(sizey==32) OLED_ShowChinese32x32(x,y,s,sizey,mode);
 		else return;
@@ -123,6 +124,53 @@ void OLED_ShowChinese(uint8_t x,uint8_t y,uint8_t *s,uint8_t sizey,uint8_t mode)
 		x+=sizey;
 	}
 }
+//******************************************************************************
+//    函数说明：OLED显示汉字
+//    入口数据：x,y :起点坐标
+//              *s  :要显示的汉字
+//              sizey 字符高度 
+//              mode  0:正常显示；1：反色显示
+//    返回值：  无
+//******************************************************************************
+void OLED_ShowChinese12x12(uint8_t x,uint8_t y,uint8_t *s,uint8_t sizey,uint8_t mode)
+{
+	uint8_t i,j,k,DATA=0;
+	uint16_t HZnum;
+	HZnum=sizeof(tfont12)/sizeof(typFNT_GB12);	
+	Column_Address(x/4, x/4+sizey/4-1); // 12/4 = 分配3个列地址 (12像素宽)
+	Row_Address(y, y+sizey-1);          // 分配12行
+    
+	for(k=0;k<HZnum;k++)
+	{
+		if ((tfont12[k].Index[0]==*(s))&&(tfont12[k].Index[1]==*(s+1)))
+		{ 	
+			for(i=0; i<12; i++) // 逐行扫描，共12行
+			{
+                // 1. 发送该行的前 8 个像素 (对应字模第 1 个字节)
+                uint8_t byte1 = tfont12[k].Msk[i*2];
+				for(j=0; j<4; j++) 
+				{
+                    DATA=0;
+					if(byte1 & (0x01<<(j*2+0))) DATA |= 0xf0;
+					if(byte1 & (0x01<<(j*2+1))) DATA |= 0x0f;
+					if(mode) OLED_WR_Byte(~DATA); else OLED_WR_Byte(DATA);
+				}
+                
+                // 2. 发送该行的后 4 个像素 (对应字模第 2 个字节的前半部分)
+                uint8_t byte2 = tfont12[k].Msk[i*2+1];
+                for(j=0; j<2; j++) // 注意：这里只循环 2 次！凑齐12个像素
+                {
+                    DATA=0;
+					if(byte2 & (0x01<<(j*2+0))) DATA |= 0xf0;
+					if(byte2 & (0x01<<(j*2+1))) DATA |= 0x0f;
+					if(mode) OLED_WR_Byte(~DATA); else OLED_WR_Byte(DATA);
+                }
+			}
+			break;  // 找到汉字后立即退出，提升刷新速度
+		}				  	
+	}
+}
+
 //******************************************************************************
 //    函数说明：OLED显示汉字
 //    入口数据：x,y :起点坐标
@@ -278,6 +326,27 @@ void OLED_ShowChinese32x32(uint8_t x,uint8_t y,uint8_t *s,uint8_t sizey,uint8_t 
 void OLED_ShowChar(uint8_t x,uint8_t y,uint8_t chr,uint8_t sizey,uint8_t mode)
 {
 	uint8_t c,i,k,m,t=4,size2,data1,DATA=0;
+	
+//	// ======== 新增的 12号 ASCII 特殊对齐处理 ========
+//    if (sizey == 12) 
+//    {
+//        // SSD1322要求列必须是4的倍数，强制将6x12拓展为8x12的窗口
+//        Column_Address(x/4, x/4+2-1); // 分配2列 = 8个像素
+//        Row_Address(y, y+12-1);
+//        for(i=0; i<12; i++) 
+//        {
+//            data1 = ascii_1206[c][i]; // 读取1字节(包含6像素数据)
+//            for(k=0; k<4; k++) // 循环4次输出8个像素，后2像素自然为黑边
+//            { 
+//                DATA = 0;
+//                if(data1 & (0x01<<(k*2+0))) DATA |= 0xf0;
+//                if(data1 & (0x01<<(k*2+1))) DATA |= 0x0f;
+//                if(mode) OLED_WR_Byte(~DATA); else OLED_WR_Byte(DATA);
+//            }
+//        }
+//        return; // 结束绘制，跳过后面的常规逻辑
+//    }
+//	// ======== 
 	size2=(sizey/16+((sizey%16)?1:0))*sizey;
 	c=chr-' ';//得到偏移后的值
 	Column_Address(x/4,x/4+sizey/8-1);
@@ -295,6 +364,10 @@ void OLED_ShowChar(uint8_t x,uint8_t y,uint8_t chr,uint8_t sizey,uint8_t mode)
 		else if(sizey==32)
 		{
 			data1=ascii_3216[c][i];//16x32 ASCII码
+		}
+		else if(sizey==12)
+		{
+			data1=ascii_1206[c][i];//6x12 ASCII码
 		}
 //			else if(sizey==xx)               //如果需要添加新的字体，只需要将xx替换成所需汉字高度
 //			{                                //然后新建数组ascii_xxxx[][]并将取好的模放入其中

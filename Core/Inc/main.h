@@ -36,15 +36,19 @@ extern "C" {
 #include "AD7195.h"
 #include "ad_spi.h"
 #include "ad_values.h"
+#include "scale_app.h"
 /***********************************CAN****************************************/
 /*****************************Test_transmission********************************/
 #include "Serial.h"
 /*********************************System***************************************/
 #include "delay.h"
+/***********************************CAN****************************************/
+#include "can.h"
 /********************************Hardware**************************************/
 #include "led.h"
 #include "button.h"
 #include "oled.h"
+#include "oled_app.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

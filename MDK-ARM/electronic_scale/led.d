@@ -34,10 +34,13 @@ electronic_scale\led.o: ../AD/ad_spi.h
 electronic_scale\led.o: ../Core/Inc/main.h
 electronic_scale\led.o: ../Core/Inc/spi.h
 electronic_scale\led.o: ../AD/ad_values.h
+electronic_scale\led.o: ../AD/scale_app.h
 electronic_scale\led.o: ../Transmission/Serial.h
 electronic_scale\led.o: ../Core/Inc/usart.h
 electronic_scale\led.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdio.h
 electronic_scale\led.o: ../System/delay.h
+electronic_scale\led.o: ../Core/Inc/can.h
 electronic_scale\led.o: ../Hardware/led.h
 electronic_scale\led.o: ../Hardware/button.h
 electronic_scale\led.o: ../Hardware/oled.h
+electronic_scale\led.o: ..\Data&app\oled_app.h

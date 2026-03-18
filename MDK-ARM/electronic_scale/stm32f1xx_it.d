@@ -33,11 +33,14 @@ electronic_scale\stm32f1xx_it.o: ../AD/ad_spi.h
 electronic_scale\stm32f1xx_it.o: ../Core/Inc/main.h
 electronic_scale\stm32f1xx_it.o: ../Core/Inc/spi.h
 electronic_scale\stm32f1xx_it.o: ../AD/ad_values.h
+electronic_scale\stm32f1xx_it.o: ../AD/scale_app.h
 electronic_scale\stm32f1xx_it.o: ../Transmission/Serial.h
 electronic_scale\stm32f1xx_it.o: ../Core/Inc/usart.h
 electronic_scale\stm32f1xx_it.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdio.h
 electronic_scale\stm32f1xx_it.o: ../System/delay.h
+electronic_scale\stm32f1xx_it.o: ../Core/Inc/can.h
 electronic_scale\stm32f1xx_it.o: ../Hardware/led.h
 electronic_scale\stm32f1xx_it.o: ../Hardware/button.h
 electronic_scale\stm32f1xx_it.o: ../Hardware/oled.h
+electronic_scale\stm32f1xx_it.o: ..\Data&app\oled_app.h
 electronic_scale\stm32f1xx_it.o: ../Core/Inc/stm32f1xx_it.h

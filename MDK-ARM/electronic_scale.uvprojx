@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;../AD;../System;../Hardware;../Transmission</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;../AD;../System;../Hardware;../Transmission;..\Flash;..\CAN;..\Data&amp;app</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -517,6 +517,31 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Data&amp;app</GroupName>
+          <Files>
+            <File>
+              <FileName>Oled_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data&amp;app\Oled_app.c</FilePath>
+            </File>
+            <File>
+              <FileName>Oled_app.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Data&amp;app\Oled_app.h</FilePath>
+            </File>
+            <File>
+              <FileName>scale_info.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data&amp;app\scale_info.c</FilePath>
+            </File>
+            <File>
+              <FileName>scale_info.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Data&amp;app\scale_info.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>AD</GroupName>
           <Files>
             <File>
@@ -549,6 +574,16 @@
               <FileType>5</FileType>
               <FilePath>..\AD\ad_values.h</FilePath>
             </File>
+            <File>
+              <FileName>scale_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\AD\scale_app.c</FilePath>
+            </File>
+            <File>
+              <FileName>scale_app.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\AD\scale_app.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -567,6 +602,21 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>CAN</GroupName>
+          <Files>
+            <File>
+              <FileName>can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CAN\can.c</FilePath>
+            </File>
+            <File>
+              <FileName>can.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CAN\can.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>System</GroupName>
           <Files>
             <File>
@@ -578,6 +628,21 @@
               <FileName>delay.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\System\delay.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Flash</GroupName>
+          <Files>
+            <File>
+              <FileName>flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Flash\flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Flash\flash.h</FilePath>
             </File>
           </Files>
         </Group>

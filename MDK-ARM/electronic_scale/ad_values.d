@@ -1,6 +1,5 @@
 electronic_scale\ad_values.o: ..\AD\ad_values.c
 electronic_scale\ad_values.o: ..\AD\ad_values.h
-electronic_scale\ad_values.o: ../Core/Inc/main.h
 electronic_scale\ad_values.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 electronic_scale\ad_values.o: ../Core/Inc/stm32f1xx_hal_conf.h
 electronic_scale\ad_values.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h
@@ -29,15 +28,5 @@ electronic_scale\ad_values.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_
 electronic_scale\ad_values.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 electronic_scale\ad_values.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h
 electronic_scale\ad_values.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
-electronic_scale\ad_values.o: ../AD/AD7195.h
-electronic_scale\ad_values.o: ../AD/ad_spi.h
-electronic_scale\ad_values.o: ../Core/Inc/main.h
-electronic_scale\ad_values.o: ../Core/Inc/spi.h
-electronic_scale\ad_values.o: ../AD/ad_values.h
-electronic_scale\ad_values.o: ../Transmission/Serial.h
-electronic_scale\ad_values.o: ../Core/Inc/usart.h
+electronic_scale\ad_values.o: ..\AD\ad7195.h
 electronic_scale\ad_values.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdio.h
-electronic_scale\ad_values.o: ../System/delay.h
-electronic_scale\ad_values.o: ../Hardware/led.h
-electronic_scale\ad_values.o: ../Hardware/button.h
-electronic_scale\ad_values.o: ../Hardware/oled.h

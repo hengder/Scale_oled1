@@ -52,6 +52,8 @@
 
 #define AD7195_MODE_RATE(x)     ((x) & 0x3FF)       // 更新速率选择
 
+#define AD7195_MODE_REJ60       (1 << 10)   // 开启同时抑制 50Hz/60Hz 工频干扰
+
 /* ---------------- 配置寄存器位掩码 ---------------- */
 #define AD7195_CONF_CHOP        (1 << 23) // 斩波使能
 #define AD7195_CONF_ACX         (1 << 22) // 交流激励使能
@@ -75,15 +77,106 @@
 #define AD7195_GPOCON_BPDSW     (1 << 6)  // 桥路电源开关
 
 /* 函数声明 */
-void AD7195_SetRegisterValue(unsigned char registerAddress, unsigned long registerValue, unsigned char bytesNumber, unsigned char modifyCS);
-unsigned long AD7195_GetRegisterValue(unsigned char registerAddress, unsigned char bytesNumber, unsigned char modifyCS);
-unsigned char AD7195_Init(void);
-void AD7195_ChannelSelect(unsigned short channel_bits);
+
+/*! Writes data into a register. 
+ * 将数据写入寄存器
+ * registerAddress：寄存器地址（头文件有宏定义）
+ * registerValue: 写入寄存器的值
+ * bytesNumber：写入的字节数
+ * modifyCS：是否允许芯片选择更改
+ */
+void AD7195_SetRegisterValue(unsigned char registerAddress,
+														 unsigned long registerValue,
+														 unsigned char bytesNumber,
+														 unsigned char modifyCS);
+														 
+/*! Reads the value of a register. 
+ * 读取寄存器的值
+ * registerAddress：寄存器地址（头文件有宏定义）
+ * bytesNumber：读取的字节数
+ * modifyCS：是否允许芯片选择更改
+ */
+unsigned long AD7195_GetRegisterValue(unsigned char registerAddress,
+																			unsigned char bytesNumber,
+																			unsigned char modifyCS);
+																			
+/*! Checks if the AD7139 part is present. 
+ * AD初始化
+ */
+unsigned char AD7195_Init(void);																		
+																			
+/*! Resets the device. 
+ * 重置AD
+ */																		
 void AD7195_Reset(void);
+																			
+/*! Waits for RDY pin to go low. 
+ * 等待转换完成标记位
+ */
 void AD7195_WaitRdyGoLow(void);
+
+/*! Selects the polarity of the conversion and the ADC input range. */
 void AD7195_RangeSetup(unsigned char polarity, unsigned char range, unsigned char acx);
-void AD7195_StartBPDSW(void);
-void AD7195_CheckBaseValtage(void);
+
+/*! Selects the channel to be enabled. 
+ * 选择通道使能
+ */
+void AD7195_ChannelSelect(unsigned short channel_bits);																			
+
+
+/*! Returns the average of several conversion results. 
+ * 多次读取求平均值
+ */
 unsigned long AD7195_ContinuousReadAvg(unsigned char sampleNumber);
+
+void AD7195_Debug_Dump(void);//调试打印寄存器信息
+																			
+
+
+
+
+
+///*! Read data from temperature sensor and converts it to Celsius degrees. 
+// * 读取温度
+// */
+//unsigned long AD7195_TemperatureRead(void);
+
+/* ================= 寄存器读取函数 ================= */
+unsigned long AD7195_GetID(void);
+
+unsigned long AD7195_GetMode(void);
+
+unsigned long AD7195_GetConfig(void);
+
+unsigned long AD7195_GetStatus(void);
+
+unsigned long AD7195_GetGPOCON(void);
+
+unsigned long AD7195_GetOffset(void);
+
+unsigned long AD7195_GetFullScale(void);
+
+/* ================= 转换与校准控制函数 ================= */
+/*! Returns the result of a single conversion. 
+ * 采集AD转换后数据
+ */
+unsigned long AD7195_SingleConversion(void);
+/*! Set device to idle or power-down. 
+ * 设置AD电源模式
+ */
+void AD7195_SetPower(unsigned char pwrMode);
+/*! Performs the given calibration to the specified channel. 
+ * 通道标定
+ */
+void AD7195_Calibrate(unsigned char mode, unsigned char channel);
+
+void AD7195_Config_Init(void);
+
+
+void AD7195_StartBPDSW(void);
+
+void AD7195_Config_Init(void);
+
+void AD7195_CheckBaseValtage(void);
 
 #endif /* __AD7195_H__ */

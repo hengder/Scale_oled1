@@ -36,6 +36,8 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
+// 假设你目前桌面上测试用的还是 500g 砝码
+#define TEST_STANDARD_WEIGHT  500.0
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -93,48 +95,137 @@ int main(void)
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	
+	OLED_Fill(0,0,256,64,0x00);
+	OLED_ShowString(56,28,"Power On Self Test",16,0);
+	Delay_ms(500);
+	/************  调试串口初始化  ************/
 	Serial_Init(); 
 	printf("System Boot OK! High Precision Scale Starting...\r\n");
-	
-  LED_Off();
-  printf("Initial LED Status: %d (0:OFF, 1:ON)\r\n", LED_Status());
-	
+	/*************  OLED初始化  *************/
+	OLED_Init();
+	LED_On();
+	/************  AD7195相关初始化  ************/
+  AD7195_Init();			// 1. 初始化底层外设
+	AD_Values_Init();		// 2. 初始化 ADC 数据滤波层
+	AD7195_Debug_Dump();// 新增调试：打印初始化后的真实状态
 
-	// 初始化 ADC (验证ID、测基准电压、开启硬件交流激励)
-  AD7195_Init();
-  printf("System Init OK! Starting to read...\r\n");
+  Scale_App_Init();		// 3. 初始化电子秤应用层
 
+//	printf("\r\n===================================\r\n");
+//  printf("高精度电子秤 串口模拟 CAN 测试程序\r\n");
+//  printf("===================================\r\n");
+//  printf("请通过串口发送以下字符进行指令测试：\r\n");
+//  printf(" [1] -> 零点标定 (空秤盘时发送)\r\n");
+//  printf(" [2] -> 满量程标定 (放上 %.0f g 砝码后发送)\r\n", TEST_STANDARD_WEIGHT);
+//  printf(" [3] -> 去皮 (扣除当前重量)\r\n");
+//  printf(" [4] -> 清除皮重 (恢复毛重显示)\r\n");
+//  printf(" [5] -> 日常清零 (应对微小底噪漂移)\r\n");
+//  printf("===================================\r\n\r\n");
+//  printf("等待标定... (标定前暂不输出重量)\r\n");
+
+//  uint32_t last_print_time = HAL_GetTick();
+//  uint8_t is_calibrated = 0; // 【新增】：控制是否允许显示示数的标志位
+		
+	OLED_ShowString(104,28,"Finish",16,0);
+//	Delay_ms(1000);
+//	OLED_Show_Test();
+	Delay_ms(500);
+	OLED_Fill(0,0,256,64,0x00);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		// 连续读取 10 次取平均值，过滤掉一部分偶然噪声
-    unsigned long raw_adc_value = AD7195_ContinuousReadAvg(10);
-    
-    // 打印 16 进制和 10 进制原始数据，方便观察跳动情况
-    printf("ADC Raw Data: 0x%06lX (%lu)\r\n", raw_adc_value, raw_adc_value);
-    
-    HAL_Delay(50); // 稍微延时，防止串口刷屏太快看清	
 		
-		if (Button_Event_Flag == 1) 
-    {
-        Button_Event_Flag = 0; // 马上清零标志位，等待下一次按下
-        
-        // 执行你的按键逻辑
-        if (LED_Status() == 1) 
-        {
-            LED_Off();
-        } 
-        else 
-        {
-            LED_On();
-        }
-        printf("[Hardware EXTI] Button Clicked! LED Status: %d\r\n", LED_Status());
-    }
-		
+			OLED_Update_Scale_UI();
+//				/* ----------------------------------------------------------- *
+//         * 任务 1：处理串口中断接收到的数据 (完美对接你写的 Serial.c)
+//         * ----------------------------------------------------------- */
+//        // 只要你的接收长度大于 0，说明中断里抓到了新数据
+//        if (Serial_RxLength > 0) 
+//        {
+//            uint8_t rx_cmd = Serial_RxBuffer[0]; // 提取收到的第一个字符
+//            
+//            // 无论收到什么，立刻清空你的缓冲区和标志位，准备迎接下一个指令
+//            Serial_ClearRxBuffer(); 
+
+//            // 过滤掉串口助手可能自动发送的回车(\r)或换行(\n)等无关字符
+//            if (rx_cmd >= '1' && rx_cmd <= '5')
+//            {
+//                printf("\r\n>>> 收到上位机指令: '%c' <<<\r\n", rx_cmd);
+
+//                switch(rx_cmd)
+//                {
+//                    case '1':
+//                        printf("执行: 零点标定中...\r\n");
+//                        Scale_Calibrate_Zero();
+//                        printf("-> 零点标定完成！开启示数显示...\r\n\r\n");
+//                        is_calibrated = 1; 
+//                        break;
+//                        
+//                    case '2':
+//                        printf("执行: 满量程标定中 (%.1f g)...\r\n", TEST_STANDARD_WEIGHT);
+//                        Scale_Calibrate_Full(TEST_STANDARD_WEIGHT);
+//                        printf("-> 满量程标定完成！开启示数显示...\r\n\r\n");
+//                        is_calibrated = 1; 
+//                        break;
+//                        
+//                    case '3':
+//                        printf("执行: 正在去皮...\r\n");
+//                        Scale_Tare();
+//                        printf("-> 去皮完成！\r\n\r\n");
+//                        break;
+//                        
+//                    case '4':
+//                        printf("执行: 清除皮重...\r\n");
+//                        Scale_Clear_Tare();
+//                        printf("-> 皮重已清除！\r\n\r\n");
+//                        break;
+//                        
+//                    case '5':
+//                        printf("执行: 日常清零...\r\n");
+//                        Scale_Zeroing();
+//                        printf("-> 清零完成！\r\n\r\n");
+//                        break;
+//                }
+//            }
+//        }
+//        /* ----------------------------------------------------------- *
+//         * 任务 2：处理板载物理按键 (本地去皮功能)
+//         * ----------------------------------------------------------- */
+//        if (Button_Event_Flag == 1)
+//        {
+//            Button_Event_Flag = 0; // 清除标志位
+//            if (is_calibrated)     // 只有标定过后按键才生效
+//            {
+//                printf("\r\n[按键触发] 执行本地去皮...\r\n");
+//                Scale_Tare();
+//                printf("-> 去皮完成！\r\n\r\n");
+//            }
+//        }
+
+//        /* ----------------------------------------------------------- *
+//         * 任务 3：定时获取重量并上报 (加入 is_calibrated 判断)
+//         * ----------------------------------------------------------- */
+//        if (is_calibrated && ((HAL_GetTick() - last_print_time) >= 200)) 
+//        {
+//            last_print_time = HAL_GetTick();
+
+//            double net_weight   = Scale_Get_Net_Weight();    // 净重
+//            double gross_weight = Scale_Get_Gross_Weight();  // 毛重
+
+//            printf("【状态】 净重: %8.1f g  |  毛重: %8.1f g\r\n", net_weight, gross_weight);
+//        }
+//        
+//        /* ----------------------------------------------------------- *
+//         * 任务 4：保持底层 ADC 抽取，防止芯片数据溢出
+//         * ----------------------------------------------------------- */
+//        // 无论是否标定，底层必须持续抽样，保证滤波器里永远是最新数据
+//        if (!is_calibrated || ((HAL_GetTick() - last_print_time) < 200))
+//        {
+//             AD_Get_FilteredValue();
+//				}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

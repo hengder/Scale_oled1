@@ -32,12 +32,15 @@ electronic_scale\ad7195.o: ..\AD\ad_spi.h
 electronic_scale\ad7195.o: ../Core/Inc/main.h
 electronic_scale\ad7195.o: ../AD/ad_spi.h
 electronic_scale\ad7195.o: ../AD/ad_values.h
-electronic_scale\ad7195.o: ../Core/Inc/main.h
+electronic_scale\ad7195.o: ../AD/scale_app.h
 electronic_scale\ad7195.o: ../Transmission/Serial.h
+electronic_scale\ad7195.o: ../Core/Inc/main.h
 electronic_scale\ad7195.o: ../Core/Inc/usart.h
 electronic_scale\ad7195.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdio.h
 electronic_scale\ad7195.o: ../System/delay.h
+electronic_scale\ad7195.o: ../Core/Inc/can.h
 electronic_scale\ad7195.o: ../Hardware/led.h
 electronic_scale\ad7195.o: ../Hardware/button.h
 electronic_scale\ad7195.o: ../Hardware/oled.h
+electronic_scale\ad7195.o: ..\Data&app\oled_app.h
 electronic_scale\ad7195.o: ../Core/Inc/spi.h

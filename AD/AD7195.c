@@ -2,9 +2,11 @@
 #include "ad_spi.h"
 #include <stdio.h>
 
-// 读取 MISO 引脚的电平状态来判断 RDY (假设 MISO 接在 PB14)
+// 读取 MISO 引脚的电平状态来判断 RDY (目前版本 MISO 接在 PB14)
 #define AD7195_RDY_STATE   HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14)
-
+// 操作SYNC引脚(目前版本 SYNC 接在 PA8)
+#define AD7195_SYNC_HIGH()   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET)
+#define AD7195_SYNC_LOW()    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET)
 /**
  * @brief  向寄存器写数据
  * @param  registerAddress: 寄存器地址
@@ -74,23 +76,20 @@ void AD7195_Reset(void)
     HAL_Delay(2); // 等待复位完成
 }
 
+
+
 /**
- * @brief  等待 RDY 变低 (使用纯 SPI 读取状态寄存器，杜绝 GPIO 复用读取失败)
+ * @brief  等待 RDY 变低 (转换完成)
  */
 void AD7195_WaitRdyGoLow(void)
 {
+    // 超时计数器，防止硬件意外损坏时程序死循环
     uint32_t timeOutCnt = 0x1FFFFF; 
     
-    while(timeOutCnt--)
+    // 不断读取 PB14(MISO) 引脚电平，直到其变为低电平 (转换完成)
+    while((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_SET) && timeOutCnt--)
     {
-        // 0x40 是读取状态寄存器，返回的 bit 7 是 RDY 标志
-        unsigned long status = AD7195_GetRegisterValue(AD7195_REG_STAT, 1, 0);
-        
-        // 当 RDY 位为 0 时，说明转换完成，数据就绪
-        if((status & AD7195_STAT_RDY) == 0)
-        {
-            break; 
-        }
+        // 保持空转等待即可
     }
     
     if (timeOutCnt == 0) {
@@ -101,6 +100,17 @@ void AD7195_WaitRdyGoLow(void)
 /**
  * @brief  量程与极性设置
  */
+/***************************************************************************//**
+ * @brief Selects the polarity of the conversion and the ADC input range.
+ *
+ * @param polarity - Polarity select bit. 
+                     Example: 0 - bipolar operation is selected.
+                              1 - unipolar operation is selected.
+* @param range - Gain select bits. These bits are written by the user to select 
+                 the ADC input range.     
+ *
+ * @return none.
+*******************************************************************************/
 void AD7195_RangeSetup(unsigned char polarity, unsigned char range, unsigned char acx)
 {
     unsigned long oldRegValue = 0x0;
@@ -117,20 +127,20 @@ void AD7195_RangeSetup(unsigned char polarity, unsigned char range, unsigned cha
     AD7195_SetRegisterValue(AD7195_REG_CONF, newRegValue, 3, 1);
 }
 
-/**
- * @brief  开启桥路电源开关 (BPDSW)
- */
-void AD7195_StartBPDSW(void)
-{
-    unsigned long oldRegValue = 0x0;
-    unsigned long newRegValue = 0x0;
+///**
+// * @brief  开启桥路电源开关 (BPDSW)
+// */
+//void AD7195_StartBPDSW(void)
+//{
+//    unsigned long oldRegValue = 0x0;
+//    unsigned long newRegValue = 0x0;
 
-    oldRegValue = AD7195_GetRegisterValue(AD7195_REG_GPOCON, 1, 1);
-    oldRegValue &= ~(AD7195_GPOCON_BPDSW); 
-    newRegValue = oldRegValue | (AD7195_GPOCON_BPDSW);
-    
-    AD7195_SetRegisterValue(AD7195_REG_GPOCON, newRegValue, 1, 1);
-}
+//    oldRegValue = AD7195_GetRegisterValue(AD7195_REG_GPOCON, 1, 1);
+//    oldRegValue &= ~(AD7195_GPOCON_BPDSW); 
+//    newRegValue = oldRegValue | (AD7195_GPOCON_BPDSW);
+//    
+//    AD7195_SetRegisterValue(AD7195_REG_GPOCON, newRegValue, 1, 1);
+//}
 
 /**
  * @brief  检测参考电压基准是否异常
@@ -182,46 +192,141 @@ void AD7195_ChannelSelect(unsigned short channel_bits)
     AD7195_SetRegisterValue(AD7195_REG_CONF, newRegValue, 3, 1);
 }
 
+
 /**
- * @brief  AD7195 整体初始化 (上电自检及配置)
+ * @brief  AD7195 整体系统启动与自校准序列
  * @retval 1:成功  0:失败
  */
 unsigned char AD7195_Init(void)
 {
-    unsigned char status = 1;
     unsigned char regVal = 0;
     
-    // 1. 初始化底层的 SPI 片选状态
-    AD_SPI_Init();
-    HAL_Delay(10); // 上电稳定延时
+    // 1. 释放 SYNC 引脚，唤醒芯片的数字滤波器 (极度重要)
+    AD7195_SYNC_HIGH();
+    HAL_Delay(5);
     
-    // 2. 软件复位芯片
+    // 2. 初始化底层的 SPI CS 片选引脚
+    AD_SPI_Init();
+    HAL_Delay(10); 
+    
+    // 3. 软件复位 AD7195，清除芯片内可能的垃圾状态
     AD7195_Reset();
     HAL_Delay(5);
     
-    // 3. 读取 ID 寄存器以验证 SPI 通信是否正常
+    // 4. 读取 ID 寄存器以验证 SPI 时序
     regVal = AD7195_GetRegisterValue(AD7195_REG_ID, 1, 1);
     printf("AD7195 ID Read: 0x%02X\r\n", regVal);
-    
     if( (regVal & AD7195_ID_MASK) != ID_AD7195)
     {
-        printf("AD7195 Init Failed!\r\n");
-        return 0; // 初始化失败
+        printf("ERROR: AD7195 Init Failed!\r\n");
+        return 0; 
     }
     
-//    // 4. 开启传感器桥路电源
-//    AD7195_StartBPDSW();
+    // 5. 写入我们精细化设计的底层配置
+    AD7195_Config_Init();
+    HAL_Delay(10); // 稍微延时，等待模拟前端缓冲器稳定
     
-    // 5. 检查外部参考电压源
+    // 6. 检查参考电压 (由于 REFDET 已经在 Config 中打开，这里直接检测即可)
     AD7195_CheckBaseValtage();
     
-    // 6. 配置传感器采集参数: 双极性(0), 增益128(7), 开启交流激励(1)
-    AD7195_RangeSetup(0, AD7195_CONF_GAIN_128, 1);
+    // 7. 【内部零点校准】
+    // 命令芯片自身短接输入端，计算出 PGA 放大器和 ADC 固有的零点漂移，并存入失调寄存器。
+    printf("AD7195 Executing Internal Zero Calibration...\r\n");
+    AD7195_Calibrate(AD7195_MODE_CAL_INT_ZERO, 0x02);
+    printf("AD7195 Calibration Done!\r\n");
     
-		// 7. 【新增】选择 AIN3(+) 和 AIN4(-) 作为差分输入通道 (对应位为 0x02)
-    AD7195_ChannelSelect(0x02);
-		
-    return status;
+    return 1;
+}
+
+
+
+/**
+ * @brief  AD7195 内部寄存器快照打印
+ */
+void AD7195_Debug_Dump(void)
+{
+    printf("\r\n--- AD7195 Register Dump ---\r\n");
+    
+    // 1. 读状态寄存器 (0x00)
+    unsigned long stat = AD7195_GetRegisterValue(AD7195_REG_STAT, 1, 1);
+    printf("STAT Reg (0x00): 0x%02lX\r\n", stat);
+    
+    // 2. 读模式寄存器 (0x01)
+    unsigned long mode = AD7195_GetRegisterValue(AD7195_REG_MODE, 3, 1);
+    printf("MODE Reg (0x01): 0x%06lX\r\n", mode);
+    
+    // 3. 读配置寄存器 (0x02)
+    unsigned long conf = AD7195_GetRegisterValue(AD7195_REG_CONF, 3, 1);
+    printf("CONF Reg (0x02): 0x%06lX\r\n", conf);
+    
+    printf("----------------------------\r\n\r\n");
+}
+
+
+////////////////////////////////////////////////////////////////////////////****///////////////////////////////////////////////////////////////////
+
+
+///***************************************************************************//**
+// * @brief Read data from temperature sensor and converts it to Celsius degrees.
+// *
+// * @return temperature - Celsius degrees.
+//*******************************************************************************/
+//unsigned long AD7195_TemperatureRead(void)
+//{
+//    unsigned char temperature = 0x0;
+//    unsigned long dataReg = 0x0;
+//    
+//	  // 通道使能
+//	  // 通道2
+//    AD7195_ChannelSelect(AD7195_CH_TEMP_SENSOR);
+//	
+//	  // 读取通道数据
+//    dataReg = AD7195_SingleConversion();
+//	
+//		Log_Hex(LOG_LVL_DEBUG, "temphex:", dataReg);
+//	
+//	  // 将数据转换为温度
+//	  // (29 + 273) * 2815 + 8388608 = 9238738  0x8CF8D2
+//	  // 0x800000 8388608
+//    dataReg -= 0x800000;
+//    dataReg /= 2815;   // Kelvin Temperature
+//    dataReg -= 273;    //Celsius Temperature
+//    temperature = (unsigned long) dataReg;
+//    
+//    return temperature;
+//}
+
+
+/* ========================================================================= *
+ * 转换与控制功能接口                           *
+ * ========================================================================= */
+
+/**
+ * @brief  执行一次单次转换并获取数据 (转换完成后芯片自动进入空闲/掉电模式)
+ * @retval 24位ADC转换结果
+ */
+unsigned long AD7195_SingleConversion(void)
+{
+    unsigned long currentMode = 0x0;
+    unsigned long regData = 0x0;
+
+    // 1. 读取当前模式寄存器
+    currentMode = AD7195_GetRegisterValue(AD7195_REG_MODE, 3, 1);
+    
+    // 2. 擦除旧模式，写入单次转换模式
+    currentMode &= ~AD7195_MODE_SEL(0x7);
+    currentMode |= AD7195_MODE_SEL(AD7195_MODE_SINGLE);
+    
+    // 3. 启动单次转换，必须保持 CS 拉低并死等
+    SPI_AD_CS_LOW();
+    AD7195_SetRegisterValue(AD7195_REG_MODE, currentMode, 3, 0); 
+    
+    AD7195_WaitRdyGoLow(); // 等待这一次转换结束
+    
+    regData = AD7195_GetRegisterValue(AD7195_REG_DATA, 3, 0);
+    SPI_AD_CS_HIGH();
+    
+    return regData;
 }
 
 /**
@@ -232,23 +337,158 @@ unsigned char AD7195_Init(void)
 unsigned long AD7195_ContinuousReadAvg(unsigned char sampleNumber)
 {
     unsigned long samplesAverage = 0x0;
-    unsigned long command = 0x0;
+    unsigned long currentMode = 0x0;
     unsigned char count = 0x0;
     
-    // 配置为连续转换模式，使用内部时钟源，输出速率配置为 0x060
-    command = AD7195_MODE_SEL(AD7195_MODE_CONT) | 
-              AD7195_MODE_CLKSRC(AD7195_CLK_INT) |
-              AD7195_MODE_RATE(0x060);
-              
-    SPI_AD_CS_LOW(); // 整个连续读取过程中，保持 CS 拉低
-    AD7195_SetRegisterValue(AD7195_REG_MODE, command, 3, 0); // CS由本函数手动控制
+    // 1. 读取当前真实的模式寄存器状态 (保留了 REJ60 和 RATE 等配置)
+    currentMode = AD7195_GetRegisterValue(AD7195_REG_MODE, 3, 1);
     
+    // 2. 智能判断：如果当前不是连续转换模式，才去下发命令
+    if((currentMode & AD7195_MODE_SEL(0x7)) != AD7195_MODE_SEL(AD7195_MODE_CONT))
+    {
+        // 擦除旧模式，写入连续转换模式
+        currentMode &= ~AD7195_MODE_SEL(0x7);
+        currentMode |= AD7195_MODE_SEL(AD7195_MODE_CONT);
+        AD7195_SetRegisterValue(AD7195_REG_MODE, currentMode, 3, 1);
+    }
+    
+    // 3. 开始连续抓取数据
+    SPI_AD_CS_LOW(); 
     for(count = 0; count < sampleNumber; count++)
     {
-        AD7195_WaitRdyGoLow(); // 死等 RDY 变低
-        samplesAverage += AD7195_GetRegisterValue(AD7195_REG_DATA, 3, 0);
+        AD7195_WaitRdyGoLow(); 
+        samplesAverage += AD7195_GetRegisterValue(AD7195_REG_DATA, 3, 0); 
     }
     SPI_AD_CS_HIGH();
     
     return (samplesAverage / sampleNumber);
+}
+
+
+
+/**
+ * @brief  设置芯片功耗模式
+ * @param  pwrMode: AD7195_MODE_IDLE(空闲), AD7195_MODE_PWRDN(掉电), AD7195_MODE_CONT(连续)
+ */
+void AD7195_SetPower(unsigned char pwrMode)
+{
+    unsigned long oldRegValue = 0x0;
+    unsigned long newRegValue = 0x0;
+    
+    oldRegValue = AD7195_GetRegisterValue(AD7195_REG_MODE, 3, 1);
+    oldRegValue &= ~AD7195_MODE_SEL(0x7);
+    newRegValue = oldRegValue | AD7195_MODE_SEL(pwrMode);
+    
+    AD7195_SetRegisterValue(AD7195_REG_MODE, newRegValue, 3, 1);
+}
+
+/**
+ * @brief  ADC 内部/系统自动校准功能 (非常重要，用于消除零点失调和满量程误差)
+ * @param  mode: 校准模式 (例如 AD7195_MODE_CAL_INT_ZERO 内部零点校准)
+ * @param  channel: 要校准的通道掩码 (例如 0x02 代表 AIN3/AIN4)
+ */
+void AD7195_Calibrate(unsigned char mode, unsigned char channel)
+{
+    unsigned long oldRegValue = 0x0;
+    unsigned long newRegValue = 0x0;
+    
+    // 切换到需要校准的通道
+    AD7195_ChannelSelect(channel);
+    
+    oldRegValue = AD7195_GetRegisterValue(AD7195_REG_MODE, 3, 1);
+    oldRegValue &= ~AD7195_MODE_SEL(0x7);
+    newRegValue = oldRegValue | AD7195_MODE_SEL(mode);
+    
+    // 校准过程ADC会自己进行多次转换，时间较长，必须全程拉低CS等待
+    SPI_AD_CS_LOW();
+    AD7195_SetRegisterValue(AD7195_REG_MODE, newRegValue, 3, 0);
+    AD7195_WaitRdyGoLow(); // 等待校准完成
+    SPI_AD_CS_HIGH();
+}
+
+/**
+ * @brief  【高精度电子秤定制版】AD7195 核心参数精细化配置
+ * @note   直接对寄存器按位赋值，杜绝任何不确定性
+ */
+void AD7195_Config_Init(void)
+{
+    unsigned long configValue = 0x0;
+    unsigned long modeValue   = 0x0;
+
+    /* ================================================================= *
+     * 1. 组装配置寄存器 (Configuration Register) - 地址 0x02
+     * ================================================================= */
+    // [Bit 23] CHOP(斩波)    : 开启。极大地消除ADC内部的温漂和失调误差。
+    // [Bit 22] ACX(交流激励) : 关闭。硬件 REFIN- 接地，采用固定直流参考。
+    // [Bit 15:8] CHAN(通道)  : 0x02。选择 AIN3(+) 和 AIN4(-) 接收传感器信号。
+    // [Bit 6]  REFDET        : 开启。实时监控外部参考电压，断线自动报错。
+    // [Bit 4]  BUF(缓冲器)   : 开启。极大提高输入阻抗，非常适合高阻值应变片，避免漏电流吸收信号。
+    // [Bit 3]  UNIPOLAR      : 双极性。设为0，允许测量负压差，空载时数据居中于 0x800000。
+    // [Bit 2:0] GAIN(增益)   : 128倍。专为微伏级别称重传感器设计的最大增益。
+    configValue = AD7195_CONF_CHOP | 
+                  AD7195_CONF_CHAN(0x02) | 
+                  AD7195_CONF_REFDET | 
+                  AD7195_CONF_GAIN(AD7195_CONF_GAIN_128);
+                  
+    AD7195_SetRegisterValue(AD7195_REG_CONF, configValue, 3, 1);
+
+    /* ================================================================= *
+     * 2. 组装模式寄存器 (Mode Register) - 地址 0x01
+     * ================================================================= */
+    // [Bit 23:21] SEL(模式)  : 空闲模式 (IDLE)。配置完先不急着转换，等待后续执行校准。
+    // [Bit 19:18] CLK(时钟)  : 内部时钟。使用芯片自带的 4.92 MHz 时钟源。
+    // [Bit 10] REJ60         : 开启。搭配 FS=96 时，能产生高达 130dB 的 50Hz/60Hz 空间辐射抗干扰能力。
+    // [Bit 9:0] RATE(采样率) : 设为 0x060(即96)。在斩波开启下，实际出数频率约为 12.5Hz。
+    //                          (注：12.5Hz 是电子秤显示的黄金频率，数据稳如泰山)
+    modeValue = AD7195_MODE_SEL(AD7195_MODE_IDLE) |
+                AD7195_MODE_CLKSRC(AD7195_CLK_INT) |
+                AD7195_MODE_REJ60 |
+                AD7195_MODE_RATE(0x060);
+                
+    AD7195_SetRegisterValue(AD7195_REG_MODE, modeValue, 3, 1);
+}
+
+
+
+
+/* ========================================================================= *
+ * 寄存器便捷读取接口                           *
+ * ========================================================================= */
+// 0xA6
+unsigned long AD7195_GetID(void)
+{
+	  return AD7195_GetRegisterValue(AD7195_REG_ID, 1, 1);
+}
+
+// 0x080060
+unsigned long AD7195_GetMode(void)
+{
+		return AD7195_GetRegisterValue(AD7195_REG_MODE, 3, 1);
+}
+
+// 0x000117
+unsigned long AD7195_GetConfig(void)
+{
+		return AD7195_GetRegisterValue(AD7195_REG_CONF, 3, 1);
+}
+
+// 0x80
+unsigned long AD7195_GetStatus(void)
+{
+		return AD7195_GetRegisterValue(AD7195_REG_STAT, 1, 1);
+}
+
+unsigned long AD7195_GetGPOCON(void)
+{
+	  return AD7195_GetRegisterValue(AD7195_REG_GPOCON, 1, 1);
+}
+
+unsigned long AD7195_GetOffset(void)
+{
+		return AD7195_GetRegisterValue(AD7195_REG_OFFSET, 3, 1);
+}
+
+unsigned long AD7195_GetFullScale(void)
+{
+	  return AD7195_GetRegisterValue(AD7195_REG_FULLSCALE, 3, 1);
 }

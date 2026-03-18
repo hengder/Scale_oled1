@@ -32,12 +32,15 @@ electronic_scale\ad_spi.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uar
 electronic_scale\ad_spi.o: ../AD/AD7195.h
 electronic_scale\ad_spi.o: ../AD/ad_spi.h
 electronic_scale\ad_spi.o: ../AD/ad_values.h
-electronic_scale\ad_spi.o: ../Core/Inc/main.h
+electronic_scale\ad_spi.o: ../AD/scale_app.h
 electronic_scale\ad_spi.o: ../Transmission/Serial.h
+electronic_scale\ad_spi.o: ../Core/Inc/main.h
 electronic_scale\ad_spi.o: ../Core/Inc/usart.h
 electronic_scale\ad_spi.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdio.h
 electronic_scale\ad_spi.o: ../System/delay.h
+electronic_scale\ad_spi.o: ../Core/Inc/can.h
 electronic_scale\ad_spi.o: ../Hardware/led.h
 electronic_scale\ad_spi.o: ../Hardware/button.h
 electronic_scale\ad_spi.o: ../Hardware/oled.h
+electronic_scale\ad_spi.o: ..\Data&app\oled_app.h
 electronic_scale\ad_spi.o: ../Core/Inc/spi.h
