@@ -20,7 +20,10 @@
 /* USER CODE END Header */
 
 #include "scale_app.h"
-#include "ad_values.h"
+#include "scale_info.h"
+#include "ad_values.h"  
+#include <math.h>
+#include <stdlib.h>
 
 Scale_Param_t ScaleParam;
 
@@ -159,4 +162,33 @@ double Scale_Get_Net_Weight(void)
     long current_adc = AD_Get_FilteredValue();
     // 减去皮重偏移量
     return Convert_ADC_To_Weight(current_adc - ScaleParam.Tare_ADC_Offset);
+}
+
+
+// 电子秤核心业务逻辑 (供 main 的 while 循环调用)
+void Scale_App_Task(void) {
+    
+    // 1. 【核心更改】：直接获取你在 ad_values.c 中处理好的高级滤波数据！
+    g_Scale.raw_adc = AD_Get_FilteredValue();
+
+    // 2. 计算重量: y = k * (x - b)
+    float calc_weight = (g_Scale.raw_adc - g_Scale.zero_adc) * g_Scale.scale_factor;
+    
+    // 3. 简单的零点追踪 (防漂移，如果非常接近0则强制显示0)
+    if (fabs(calc_weight) < (g_Scale.division_val * 2.0f)) { 
+        calc_weight = 0.000f;
+    }
+
+    // 4. 更新全局字典 (OLED 会自动从这里拿数据)
+    g_Scale.gross_weight = calc_weight;
+    g_Scale.net_weight = g_Scale.gross_weight - g_Scale.tare_weight;
+    
+    // 5. 稳定度判断 (根据你滤波后的特性，连续两次 ADC 差值小于阈值认为稳定)
+    static int32_t last_adc = 0;
+    if (abs(g_Scale.raw_adc - last_adc) < 80) { 
+        g_Scale.is_stable = 1;
+    } else {
+        g_Scale.is_stable = 0;
+    }
+    last_adc = g_Scale.raw_adc;
 }

@@ -28,4 +28,5 @@ void   Scale_Zeroing(void);        // 日常清零 (应对微小零点漂移)
 double Scale_Get_Gross_Weight(void); // 获取毛重 (包含容器)
 double Scale_Get_Net_Weight(void);   // 获取净重 (扣除容器)
 
+void Scale_App_Task(void);
 #endif

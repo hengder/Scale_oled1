@@ -24,6 +24,12 @@ typedef struct {
     uint8_t cap_unit_type;  // 量程独立单位 (0:g, 1:kg, 2:mg, 3:lb)
     uint8_t is_alarm;       // 报警标志 (1:报警, 0:正常)
 	
+		// ======== 4. 硬件底层与标定参数 ========
+    float tare_weight;     // 皮重 (去皮时记录的重量)
+    int32_t raw_adc;       // AD7195当前读取的滤波后内码
+    int32_t zero_adc;      // 空载时的零点内码 (b)
+    float scale_factor;    // 标定比例系数 (k)
+	
 } Scale_System_t;
 
 // 声明一个全局结构体变量供外部调用

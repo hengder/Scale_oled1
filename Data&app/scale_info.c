@@ -20,5 +20,10 @@ Scale_System_t g_Scale = {
     .cap_unit_type= 1,   	// 量程独立单位 (0:g, 1:kg, 2:mg, 3:lb)
     .is_alarm     = 1,			// 报警标志 (1:报警, 0:正常)
 	
+		// ======== 4. 硬件底层与标定参数 ========
+    .tare_weight	= 0,     // 皮重 (去皮时记录的重量)
+    .raw_adc			= 0,      // AD7195当前读取的滤波后内码
+    .zero_adc			= 0,      // 空载时的零点内码 (b)
+    .scale_factor	= 0    // 标定比例系数 (k)
 };
 

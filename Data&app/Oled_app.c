@@ -77,7 +77,8 @@ void OLED_Update_Scale_UI(void)
     if (g_Scale.is_alarm) {
         OLED_ShowChinese(0, 24, (uint8_t *)"报警", 12, 1); 
     } else {
-        OLED_ShowString(0, 24, (uint8_t *)"    ", 12, 0); 
+					OLED_Fill(0,24,24,36,0x00);
+//        OLED_ShowString(0, 24, (uint8_t *)"    ", 12, 0); 
     }
 
     // 第三行 (Y=50) - 量程跟随专属的 cap_unit
@@ -131,4 +132,3 @@ void OLED_Show_Test(void)
 	Delay_ms(1000);
 
 }
-

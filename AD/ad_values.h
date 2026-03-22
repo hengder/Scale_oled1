@@ -3,6 +3,7 @@
 
 #include "stm32f1xx_hal.h"
 
+
 /* 滤波窗口大小 (数值越大越平滑，但反应越慢。10~20 适合电子秤) */
 #define FILTER_WINDOW_SIZE  20
 // 根据你之前标定的数据，500g 大约对应 101931 个 ADC 字，即 1g ≈ 200字

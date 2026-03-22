@@ -1,117 +1,127 @@
 #include "Serial.h"
-#include "usart.h"      // 引入huart1
-#include "scale_info.h" // 引入全局数据字典 g_Scale
+#include "usart.h"      
+#include "scale_info.h" 
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "ad_values.h"
 
-// 串口接收缓冲区
+// 串口接收相关变量
 uint8_t rx_byte;
 char rx_buffer[64];
 uint8_t rx_index = 0;
 uint8_t rx_complete = 0;
 
-// 重定向 printf，方便给上位机回传确认信息
+// 重定向 printf
 int fputc(int ch, FILE *f) {
     HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
     return ch;
 }
 
-// 开启第一次串口接收中断
+// 开启接收中断 (在 main 中调用一次)
 void Serial_Init(void) {
     HAL_UART_Receive_IT(&huart1, &rx_byte, 1);
 }
 
-// HAL库串口接收完成回调函数
+// 串口中断回调
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART1) {
-        // 如果接收到回车或换行符，认为一条指令结束
         if (rx_byte == '\n' || rx_byte == '\r') {
             if (rx_index > 0) {
-                rx_buffer[rx_index] = '\0'; // 添加字符串结束符
-                rx_complete = 1;            // 标记接收完成
+                rx_buffer[rx_index] = '\0'; 
+                rx_complete = 1;            
             }
         } else {
-            // 防止缓冲区溢出
             if (rx_index < 63) {
                 rx_buffer[rx_index++] = rx_byte;
             }
         }
-        // 再次开启中断，等待下一个字符
         HAL_UART_Receive_IT(&huart1, &rx_byte, 1);
     }
 }
 
-// 模拟系统底层的两个关键计算参数
-float tare_weight = 0.0f;       // 记录的皮重
-float scale_factor = 1.0f;      // 标定比例系数 (模拟)
-
-// 解析上位机指令并修改系统状态
+// 指令解析器 (包含完整的校准与UI控制)
 void Serial_Parse_Command(void) {
     if (rx_complete) {
         
-        // 1. 模拟重量变化 (指令: SIM:120.5)
-        if (strncmp(rx_buffer, "SIM:", 4) == 0) {
-            g_Scale.gross_weight = atof(&rx_buffer[4]); 
-            // 每次毛重变化，净重自动减去皮重
-            g_Scale.net_weight = g_Scale.gross_weight - tare_weight;  
-            printf(">> OK: Weight Simulated to %.3f g\r\n", g_Scale.gross_weight);
+        // 1. 去皮 (Tare)
+        if (strcmp(rx_buffer, "TARE") == 0) {
+            g_Scale.tare_weight = g_Scale.gross_weight; 
+            printf(">> OK: Tared. Tare = %.3f\r\n", g_Scale.tare_weight);
         }
         
-        // 2. 去皮操作 (指令: TARE)
-        else if (strcmp(rx_buffer, "TARE") == 0) {
-            tare_weight = g_Scale.gross_weight; // 记录当前毛重为皮重
-            g_Scale.net_weight = 0.0f;          // 此时净重归零
-            printf(">> OK: Tared. Tare Weight = %.3f g\r\n", tare_weight);
-        }
-        
-        // 3. 清除皮重 (指令: CLEARTARE)
+        // 2. 清除皮重
         else if (strcmp(rx_buffer, "CLEARTARE") == 0) {
-            tare_weight = 0.0f;
-            g_Scale.net_weight = g_Scale.gross_weight; // 净重恢复等于毛重
+            g_Scale.tare_weight = 0.0f;
             printf(">> OK: Tare Cleared.\r\n");
         }
         
-        // 4. 零点标定 (指令: CAL_ZERO)
+        // 3. 真实零点标定 (记录皮重底噪)
         else if (strcmp(rx_buffer, "CAL_ZERO") == 0) {
-            g_Scale.gross_weight = 0.0f;
-            g_Scale.net_weight = 0.0f;
-            tare_weight = 0.0f;
-            g_Scale.is_zero_ok = 1; // 点亮屏幕的“零点已校准”标志
-            printf(">> OK: Zero Calibrated.\r\n");
+            AD_Filter_Reset();                  // 清空历史滤波池
+            g_Scale.zero_adc = g_Scale.raw_adc; // 记录当前无负载的 ADC 为零点
+            g_Scale.tare_weight = 0.0f;
+            g_Scale.is_zero_ok = 1;             // 点亮零点 "√"
+            printf(">> OK: Zero Calib! Base ADC = %d\r\n", g_Scale.zero_adc);
         }
         
-        // 5. 量程标定 (指令: CAL_FULL:100.0) -> 使用100g砝码标定
+        // 4. 取消/重置零点标定状态
+        else if (strcmp(rx_buffer, "RESET_ZERO") == 0) {
+            g_Scale.is_zero_ok = 0;             // 熄灭零点 "√"，变为 "×"
+            printf(">> OK: Zero Status Reset.\r\n");
+        }
+        
+        // 5. 真实量程标定
         else if (strncmp(rx_buffer, "CAL_FULL:", 9) == 0) {
             float standard_weight = atof(&rx_buffer[9]);
-            if (standard_weight > 0) {
-                // 模拟算出了新的比例系数
-                scale_factor = standard_weight / 100000.0f; // 假设10万ADC对应标准砝码
-                g_Scale.gross_weight = standard_weight;     // 屏幕直接显示标准砝码重量
-                g_Scale.net_weight = standard_weight;
-                printf(">> OK: Full Scale Calibrated with %.3f g.\r\n", standard_weight);
+            int32_t delta_adc = g_Scale.raw_adc - g_Scale.zero_adc;
+            
+            if (standard_weight > 0 && delta_adc != 0) {
+                g_Scale.scale_factor = standard_weight / (float)delta_adc; 
+                printf(">> OK: Calibrated! Factor = %.8f\r\n", g_Scale.scale_factor);
+            } else {
+                printf(">> ERR: Calib Failed (Check ADC or Weight)\r\n");
             }
         }
         
-        // 6. 其它 UI 控制测试指令
+        // 6. 切换【实时重量】单位 (0:g, 1:kg, 2:mg, 3:lb)
         else if (strncmp(rx_buffer, "UNIT:", 5) == 0) {
             g_Scale.unit_type = atoi(&rx_buffer[5]);
-            printf(">> OK: Unit Changed to Index %d\r\n", g_Scale.unit_type);
+            printf(">> OK: Live Unit Changed to Index %d\r\n", g_Scale.unit_type);
         }
+        
+        // 7. 设置最大量程数值
+        else if (strncmp(rx_buffer, "CAP:", 4) == 0) {
+            g_Scale.max_capacity = atoi(&rx_buffer[4]);
+            printf(">> OK: Capacity Set to %d\r\n", g_Scale.max_capacity);
+        }
+        
+        // ================== 本次修复新增 ==================
+        // 8. 独立切换【量程】专属单位 (0:g, 1:kg, 2:mg, 3:lb)
+        else if (strncmp(rx_buffer, "CAPUNIT:", 8) == 0) {
+            g_Scale.cap_unit_type = atoi(&rx_buffer[8]);
+            printf(">> OK: Capacity Unit Changed to Index %d\r\n", g_Scale.cap_unit_type);
+        }
+        // ==================================================
+        
+        // 9. 设置分度值 (精度) 
+        else if (strncmp(rx_buffer, "DIV:", 4) == 0) {
+            g_Scale.division_val = atof(&rx_buffer[4]);
+            printf(">> OK: Division Set to %.3f\r\n", g_Scale.division_val);
+        }
+        
+        // 10. 报警测试
         else if (strncmp(rx_buffer, "WARN:", 5) == 0) {
             g_Scale.is_alarm = atoi(&rx_buffer[5]);
-            printf(">> OK: Alarm State = %d\r\n", g_Scale.is_alarm);
+            printf(">> OK: Alarm = %d\r\n", g_Scale.is_alarm);
         }
-        else if (strncmp(rx_buffer, "STAB:", 5) == 0) {
-            g_Scale.is_stable = atoi(&rx_buffer[5]);
-            printf(">> OK: Stable State = %d\r\n", g_Scale.is_stable);
-        }
-        // 未知指令
+        
+        // 未知指令捕捉
         else {
-            printf(">> ERR: Unknown Command: %s\r\n", rx_buffer);
+            printf(">> ERR: Unknown Cmd: %s\r\n", rx_buffer);
         }
-
-        // 清空状态，等待下一条指令
+        
+        // 状态清零，准备接收下一条
         rx_index = 0;
         rx_complete = 0;
     }

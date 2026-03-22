@@ -104,7 +104,8 @@ int main(void)
 	Serial_Init(); 
 	printf("System Boot OK! High Precision Scale Starting...\r\n");
 	// 假装已经连接上位机
-  g_Scale.is_pc_link = 1;
+  g_Scale.is_pc_link = 1; // 假装连接上位机，点亮标志
+  g_Scale.scale_factor = 0.0001f; // 给个初始极小比例，防止初始乱码
 	
 	/************  AD7195相关初始化  ************/
   AD7195_Init();			// 1. 初始化底层外设
@@ -113,7 +114,7 @@ int main(void)
 
   Scale_App_Init();		// 3. 初始化电子秤应用层
 
-		
+	OLED_Fill(0,0,256,64,0x00);	
 	OLED_ShowString(104,28,"Finish",16,0);
 //	Delay_ms(1000);
 //	OLED_Show_Test();
@@ -125,12 +126,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		// 1. 检查并解析上位机发来的串口指令
+		// 1. 获取真实传感器数据并计算 (物理层)
+      Scale_App_Task();
+      
+      // 2. 解析串口的标定/去皮指令 (控制层)
       Serial_Parse_Command();
-		// 2. 根据最新的全局数据，刷新 OLED 屏幕
+      
+      // 3. 刷新屏幕显示 (UI层)
       OLED_Update_Scale_UI();
-		// 3. 适当延时，约 20Hz 的刷新率
-      HAL_Delay(50);
+      
+      HAL_Delay(50); // 控制约 20Hz 刷新率
 
     /* USER CODE END WHILE */
 

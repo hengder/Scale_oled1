@@ -1,7 +1,7 @@
 Dependencies for Project 'electronic_scale', Target 'electronic_scale': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::ARMCC
 F (startup_stm32f103xb.s)(0x69A4071A)(--cpu Cortex-M3 -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include--pd "__UVISION_VERSION SETA 537" --pd "_RTE_ SETA 1" --pd "STM32F10X_MD SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f103xb.lst --xref -o electronic_scale\startup_stm32f103xb.o --depend electronic_scale\startup_stm32f103xb.d)
-F (../Core/Src/main.c)(0x69BA6383)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\main.o --omf_browse electronic_scale\main.crf --depend electronic_scale\main.d)
+F (../Core/Src/main.c)(0x69BF895C)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\main.o --omf_browse electronic_scale\main.crf --depend electronic_scale\main.d)
 I (../Core/Inc/main.h)(0x69BA630E)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x673DC394)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x6981A4BA)
@@ -31,12 +31,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -76,12 +76,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -119,12 +119,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Hardware/led.h)(0x6981A7A6)
@@ -161,11 +161,11 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -203,12 +203,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -245,12 +245,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -288,12 +288,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -720,7 +720,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
-F (..\Data&app\Oled_app.c)(0x69BA6B70)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\oled_app.o --omf_browse electronic_scale\oled_app.crf --depend electronic_scale\oled_app.d)
+F (..\Data&app\Oled_app.c)(0x69BF9520)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\oled_app.o --omf_browse electronic_scale\oled_app.crf --depend electronic_scale\oled_app.d)
 I (..\Data&app\oled_app.h)(0x69BA387F)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x673DC394)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x6981A4BA)
@@ -751,12 +751,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (../Hardware/oled.h)(0x69B918C7)
 I (../Core/Inc/main.h)(0x69BA630E)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -764,10 +764,10 @@ I (../Hardware/led.h)(0x6981A7A6)
 I (../Hardware/button.h)(0x69919BBA)
 I (D:\Keil5\ARM\ARMCC\include\stdio.h)(0x60252374)
 F (..\Data&app\Oled_app.h)(0x69BA387F)()
-F (..\Data&app\scale_info.c)(0x69BEA8A4)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\scale_info.o --omf_browse electronic_scale\scale_info.crf --depend electronic_scale\scale_info.d)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+F (..\Data&app\scale_info.c)(0x69BEADEF)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\scale_info.o --omf_browse electronic_scale\scale_info.crf --depend electronic_scale\scale_info.d)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (D:\Keil5\ARM\ARMCC\include\stdint.h)(0x6025237E)
-F (..\Data&app\scale_info.h)(0x69BEA8A4)()
+F (..\Data&app\scale_info.h)(0x69BEADBD)()
 F (..\AD\ad_spi.c)(0x69BA69CE)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\ad_spi.o --omf_browse electronic_scale\ad_spi.crf --depend electronic_scale\ad_spi.d)
 I (..\AD\ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/main.h)(0x69BA630E)
@@ -799,11 +799,11 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -845,10 +845,10 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\AD\ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/main.h)(0x69BA630E)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/ad_spi.h)(0x6991BDA8)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -859,7 +859,7 @@ I (../Core/Inc/spi.h)(0x698043B5)
 I (D:\Keil5\ARM\ARMCC\include\stdio.h)(0x60252374)
 F (..\AD\AD7195.h)(0x69A6D696)()
 F (..\AD\ad_values.c)(0x69BA6A4E)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\ad_values.o --omf_browse electronic_scale\ad_values.crf --depend electronic_scale\ad_values.d)
-I (..\AD\ad_values.h)(0x69A7DB08)
+I (..\AD\ad_values.h)(0x69BEAEFC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x673DC394)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x6981A4BA)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x673DC394)
@@ -889,9 +889,9 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\AD\ad7195.h)(0x69A6D696)
 I (D:\Keil5\ARM\ARMCC\include\stdio.h)(0x60252374)
-F (..\AD\ad_values.h)(0x69A7DB08)()
-F (..\AD\scale_app.c)(0x69BEA90C)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\scale_app.o --omf_browse electronic_scale\scale_app.crf --depend electronic_scale\scale_app.d)
-I (..\AD\scale_app.h)(0x69A7DC57)
+F (..\AD\ad_values.h)(0x69BEAEFC)()
+F (..\AD\scale_app.c)(0x69BEADEF)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\scale_app.o --omf_browse electronic_scale\scale_app.crf --depend electronic_scale\scale_app.d)
+I (..\AD\scale_app.h)(0x69BEAF2A)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x673DC394)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x6981A4BA)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x673DC394)
@@ -919,9 +919,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
-I (..\AD\ad_values.h)(0x69A7DB08)
-F (..\AD\scale_app.h)(0x69A7DC57)()
-F (..\Transmission\Serial.c)(0x69BEA8EA)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\serial.o --omf_browse electronic_scale\serial.crf --depend electronic_scale\serial.d)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
+I (..\AD\ad_values.h)(0x69BEAEFC)
+I (D:\Keil5\ARM\ARMCC\include\math.h)(0x60252378)
+I (D:\Keil5\ARM\ARMCC\include\stdlib.h)(0x60252374)
+F (..\AD\scale_app.h)(0x69BEAF2A)()
+F (..\Transmission\Serial.c)(0x69BEB75B)(--c99 -c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../AD -I ../System -I ../Hardware -I ../Transmission -I ..\Flash -I ..\CAN -I ..\Data&app-I.\RTE\_electronic_scale-ID:\Keil5\ARM\PACK\ARM\CMSIS\5.9.0\CMSIS\Core\Include-ID:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.4.0\Device\Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o electronic_scale\serial.o --omf_browse electronic_scale\serial.crf --depend electronic_scale\serial.d)
 I (..\Transmission\Serial.h)(0x69BA61DE)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x673DC394)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x6981A4BA)
@@ -953,12 +956,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (../Core/Inc/usart.h)(0x698043B5)
 I (../Core/Inc/main.h)(0x69BA630E)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
 I (../Hardware/led.h)(0x6981A7A6)
@@ -1033,12 +1036,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../Core/Inc/can.h)(0x698043B5)
 I (../Hardware/led.h)(0x6981A7A6)
@@ -1077,12 +1080,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)
@@ -1121,12 +1124,12 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x673DC394)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x673DC394)
 I (..\Data&app\oled_app.h)(0x69BA387F)
-I (..\Data&app\scale_info.h)(0x69BEA8A4)
+I (..\Data&app\scale_info.h)(0x69BEADBD)
 I (../AD/AD7195.h)(0x69A6D696)
 I (../AD/ad_spi.h)(0x6991BDA8)
 I (../Core/Inc/spi.h)(0x698043B5)
-I (../AD/ad_values.h)(0x69A7DB08)
-I (../AD/scale_app.h)(0x69A7DC57)
+I (../AD/ad_values.h)(0x69BEAEFC)
+I (../AD/scale_app.h)(0x69BEAF2A)
 I (../Transmission/Serial.h)(0x69BA61DE)
 I (../System/delay.h)(0x69BE57C5)
 I (../Core/Inc/can.h)(0x698043B5)

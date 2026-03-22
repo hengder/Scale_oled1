@@ -28,4 +28,7 @@ electronic_scale\scale_app.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_
 electronic_scale\scale_app.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 electronic_scale\scale_app.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h
 electronic_scale\scale_app.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+electronic_scale\scale_app.o: ..\Data&app\scale_info.h
 electronic_scale\scale_app.o: ..\AD\ad_values.h
+electronic_scale\scale_app.o: D:\Keil5\ARM\ARMCC\Bin\..\include\math.h
+electronic_scale\scale_app.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdlib.h
